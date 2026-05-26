@@ -5,7 +5,7 @@
 **Working title:** Learning a pre-treatment anatomical motion-risk phenotype for personalized prostate radiotherapy.
 **Project type:** Retrospective model development, validation, and virtual clinical triage study
 **Clinical domain:** Prostate cancer external beam radiotherapy
-**Core technologies:** Planning CT, anatomical delineations, geometric biomarkers (golden fiducials), 3D deep learning, MAISI-v2-derived anatomical representations, motion risk prediction
+**Core technologies:** Planning CT, anatomical delineations, geometric biomarkers (golden fiducials), 3D deep learning, foundation model-derived anatomical representations, motion risk prediction
 
 ---
 

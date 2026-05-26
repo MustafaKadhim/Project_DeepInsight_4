@@ -774,22 +774,14 @@ body[data-theme="dark"] .section-badge {
    PRINT
    ============================================= */
 @media print {
-  :root {
-    --bg: #fff; --ink: #111; --card: #fff; --line: rgba(17,17,17,.15); --sh: none; --sh-lg: none;
-  }
+  * { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
   .bg-orb, .toc-panel, .header-actions { display: none !important; }
-  body { background: #fff; color: #111; }
-  .site-header { background: #fff; padding: 0; }
-  .site-header::before, .site-header::after { display: none; }
-  #page-title { color: #111; }
-  .subtitle { color: #555; }
-  .markdown-body::before { display: none; }
-  .site-header-inner, .markdown-body, .collapsible-section {
-    border: none; box-shadow: none; background: #fff; backdrop-filter: none; break-inside: avoid;
-  }
   .layout { display: block; max-width: none; padding: 0; }
   .collapsible-section:not([open]) .collapsible-body { display: block; }
-  .collapsible-summary { background: #f5f5f5; border: 1px solid #ddd; }
+  .collapsible-section { break-inside: avoid; }
+  .site-header { padding: 1.5rem 2rem; }
+  .markdown-body { backdrop-filter: none; }
 }
 
 /* =============================================
