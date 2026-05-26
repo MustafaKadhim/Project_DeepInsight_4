@@ -3,6 +3,7 @@
 This folder now contains a markdown-connected project-plan website:
 
 - index.html
+- visual_overview.html
 - styles.css
 - app.js
 - Project_plan.md
@@ -10,6 +11,9 @@ This folder now contains a markdown-connected project-plan website:
 ## How it works
 
 The page loads and renders Project_plan.md directly in the browser.
+
+The visual overview page is a standalone, visitor-facing companion page with
+hand-crafted SVG/CSS visualizations for the core framework concepts.
 
 This means your editing workflow is simple:
 
@@ -37,6 +41,10 @@ python3 -m http.server 8000
 Then open:
 
 http://localhost:8000/index.html
+
+For the visual overview:
+
+http://localhost:8000/visual_overview.html
 
 ## Share as a link
 
