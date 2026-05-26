@@ -1,11 +1,16 @@
-# Project Plan v0.2
+# Project Plan v0.1
 
 # Learning a Pre-treatment Anatomical Motion-Risk Phenotype for Personalized Prostate Radiotherapy
 
-**Working title:** Learning a pre-treatment anatomical motion-risk phenotype for personalized prostate radiotherapy.
-**Project type:** Retrospective model development, validation, and virtual clinical triage study
-**Clinical domain:** Prostate cancer external beam radiotherapy
-**Core technologies:** Planning CT, anatomical delineations, geometric biomarkers (golden fiducials), 3D deep learning, foundation model-derived anatomical representations, motion risk prediction
+- **Working title:** Learning a pre-treatment anatomical motion-risk phenotype for personalized prostate radiotherapy
+- **Project type:** Retrospective model development, validation, and virtual clinical triage study
+- **Clinical domain:** Prostate cancer external beam radiotherapy
+- **Core technologies and concepts:**
+  - Planning CT and anatomical delineations
+  - Geometric biomarkers (golden fiducials)
+  - 3D deep learning
+  - Foundation model-derived anatomical representations
+  - Motion risk predictions
 
 ---
 
