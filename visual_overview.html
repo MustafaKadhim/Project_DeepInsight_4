@@ -1,0 +1,1168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Visual Overview | Anatomical Motion-Risk Phenotype</title>
+    <meta
+      name="description"
+      content="A non-technical visual overview of a framework for predicting prostate radiotherapy motion risk from pre-treatment anatomy."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #110c08;
+        --bg-2: #18110c;
+        --panel: rgba(29, 20, 14, 0.86);
+        --panel-2: rgba(36, 25, 18, 0.92);
+        --ink: #f4eade;
+        --ink-2: #d5c3af;
+        --muted: #9d826c;
+        --line: rgba(244, 234, 222, 0.12);
+        --line-2: rgba(244, 234, 222, 0.07);
+        --accent: #e8845c;
+        --accent-2: #d4a052;
+        --teal: #5dbbb1;
+        --green: #67c38b;
+        --amber: #e0b354;
+        --coral: #ec725f;
+        --red: #f07070;
+        --shadow: 0 18px 46px rgba(0, 0, 0, 0.34);
+        --radius: 8px;
+        --max: 1180px;
+      }
+
+      * { box-sizing: border-box; }
+
+      html {
+        min-height: 100%;
+        background: var(--bg);
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100%;
+        margin: 0;
+        overflow-x: hidden;
+        font-family:
+          "DM Sans", Inter, ui-sans-serif, system-ui, -apple-system,
+          BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          linear-gradient(180deg, rgba(232, 132, 92, 0.06), transparent 20rem),
+          linear-gradient(135deg, #0c0805 0%, #17100b 42%, #21160f 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+        background-size: 44px 44px;
+        mask-image: linear-gradient(180deg, black, transparent 86%);
+      }
+
+      a { color: inherit; }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        border-bottom: 1px solid var(--line);
+        background: rgba(17, 12, 8, 0.82);
+        backdrop-filter: blur(18px);
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: 0.75rem 1.25rem;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.65rem;
+        min-width: 0;
+        color: var(--ink);
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      .brand-mark {
+        display: grid;
+        width: 30px;
+        height: 30px;
+        place-items: center;
+        border: 1px solid rgba(232, 132, 92, 0.42);
+        border-radius: 8px;
+        background: linear-gradient(135deg, rgba(232, 132, 92, 0.22), rgba(212, 160, 82, 0.1));
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .brand-mark svg { width: 18px; height: 18px; }
+
+      .nav {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+
+      .nav a {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--ink-2);
+        padding: 0.48rem 0.82rem;
+        text-decoration: none;
+        font-size: 0.86rem;
+        font-weight: 700;
+      }
+
+      .nav a:hover {
+        border-color: rgba(232, 132, 92, 0.46);
+        color: var(--ink);
+        background: rgba(232, 132, 92, 0.08);
+      }
+
+      .hero {
+        max-width: var(--max);
+        margin: 0 auto;
+        padding: clamp(3rem, 7vw, 6.5rem) 1.25rem 3rem;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
+        gap: clamp(2rem, 5vw, 4.5rem);
+        align-items: center;
+      }
+
+      .hero-grid > *,
+      .section-heading > *,
+      .phenotype-layout > *,
+      .utility > * {
+        min-width: 0;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin: 0 0 1rem;
+        color: var(--accent);
+        font-size: 0.75rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 22px;
+        height: 2px;
+        border-radius: 99px;
+        background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      }
+
+      h1, h2, h3, p { margin-top: 0; }
+
+      h1 {
+        max-width: 12ch;
+        margin-bottom: 1rem;
+        font-size: clamp(2.35rem, 6vw, 5rem);
+        line-height: 0.95;
+        letter-spacing: 0;
+      }
+
+      .lead {
+        max-width: 64ch;
+        color: var(--ink-2);
+        font-size: clamp(1rem, 1.6vw, 1.18rem);
+        line-height: 1.75;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.7rem;
+        margin-top: 1.5rem;
+      }
+
+      .button {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        min-height: 42px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        padding: 0.58rem 0.95rem;
+        color: var(--ink);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 800;
+      }
+
+      .button.primary {
+        border-color: transparent;
+        background: linear-gradient(90deg, var(--accent), #ef9a73);
+        color: #190c06;
+        box-shadow: 0 8px 24px rgba(232, 132, 92, 0.24);
+      }
+
+      .button svg { width: 17px; height: 17px; }
+
+      .hero-visual {
+        position: relative;
+        margin: 0;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(145deg, rgba(255, 255, 255, 0.08), transparent 42%),
+          rgba(28, 19, 13, 0.72);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+
+      .hero-visual::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.9), transparent 92%);
+      }
+
+      .hero-visual svg {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .quick-stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-top: 1px solid var(--line);
+        background: rgba(13, 9, 6, 0.44);
+      }
+
+      .quick-stat {
+        padding: 1rem;
+        border-right: 1px solid var(--line);
+      }
+
+      .quick-stat:last-child { border-right: 0; }
+
+      .quick-stat b {
+        display: block;
+        color: var(--ink);
+        font-size: 1.05rem;
+      }
+
+      .quick-stat span {
+        display: block;
+        margin-top: 0.2rem;
+        color: var(--muted);
+        font-size: 0.78rem;
+        line-height: 1.35;
+      }
+
+      .section {
+        border-top: 1px solid var(--line-2);
+        padding: clamp(3rem, 7vw, 5.6rem) 1.25rem;
+      }
+
+      .section:nth-of-type(even) {
+        background: rgba(255, 255, 255, 0.018);
+      }
+
+      .section-inner {
+        max-width: var(--max);
+        margin: 0 auto;
+      }
+
+      .section-heading {
+        display: grid;
+        grid-template-columns: minmax(0, 0.8fr) minmax(280px, 0.65fr);
+        gap: 2rem;
+        align-items: end;
+        margin-bottom: 2rem;
+      }
+
+      h2 {
+        max-width: 15ch;
+        margin-bottom: 0;
+        font-size: clamp(1.8rem, 3.4vw, 3rem);
+        line-height: 1.02;
+        letter-spacing: 0;
+      }
+
+      .section-heading p {
+        margin-bottom: 0.2rem;
+        color: var(--ink-2);
+        line-height: 1.7;
+      }
+
+      .journey {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .step-card,
+      .feature-card,
+      .model-card,
+      .risk-card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+      }
+
+      .step-card {
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-height: 360px;
+        overflow: hidden;
+      }
+
+      .step-visual {
+        min-height: 188px;
+        border-bottom: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.025);
+      }
+
+      .step-visual svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 188px;
+      }
+
+      .step-copy {
+        padding: 1.1rem;
+      }
+
+      .step-kicker,
+      .card-kicker {
+        color: var(--accent);
+        font-size: 0.72rem;
+        font-weight: 900;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      .step-copy h3,
+      .feature-card h3,
+      .model-card h3,
+      .risk-card h3 {
+        margin: 0.4rem 0 0.5rem;
+        font-size: 1.08rem;
+        line-height: 1.24;
+      }
+
+      .step-copy p,
+      .feature-card p,
+      .model-card p,
+      .risk-card p {
+        margin-bottom: 0;
+        color: var(--ink-2);
+        font-size: 0.93rem;
+        line-height: 1.58;
+      }
+
+      .phenotype-layout {
+        display: grid;
+        grid-template-columns: minmax(320px, 0.92fr) minmax(0, 1.08fr);
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .phenotype-map {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(145deg, rgba(93, 187, 177, 0.08), transparent 48%),
+          var(--panel);
+        box-shadow: var(--shadow);
+        min-height: 520px;
+        overflow: hidden;
+      }
+
+      .phenotype-map svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 520px;
+      }
+
+      .feature-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .feature-card {
+        padding: 1rem;
+        min-height: 158px;
+      }
+
+      .feature-card[data-tone="teal"] { border-color: rgba(93, 187, 177, 0.26); }
+      .feature-card[data-tone="amber"] { border-color: rgba(224, 179, 84, 0.28); }
+      .feature-card[data-tone="coral"] { border-color: rgba(236, 114, 95, 0.28); }
+      .feature-card[data-tone="green"] { border-color: rgba(103, 195, 139, 0.28); }
+
+      .model-ladder {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .model-card {
+        position: relative;
+        min-height: 306px;
+        padding: 1rem;
+        overflow: hidden;
+      }
+
+      .model-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: var(--tone, var(--accent));
+      }
+
+      .model-icon {
+        display: grid;
+        width: 48px;
+        height: 48px;
+        place-items: center;
+        margin-bottom: 0.8rem;
+        border: 1px solid color-mix(in srgb, var(--tone, var(--accent)), transparent 45%);
+        border-radius: 8px;
+        background: color-mix(in srgb, var(--tone, var(--accent)), transparent 88%);
+      }
+
+      .model-icon svg { width: 28px; height: 28px; }
+
+      .model-card ul {
+        display: grid;
+        gap: 0.45rem;
+        margin: 1rem 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .model-card li {
+        position: relative;
+        padding-left: 1rem;
+        color: var(--muted);
+        font-size: 0.86rem;
+        line-height: 1.4;
+      }
+
+      .model-card li::before {
+        content: "";
+        position: absolute;
+        top: 0.58em;
+        left: 0;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--tone, var(--accent));
+      }
+
+      .triage-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .risk-card {
+        position: relative;
+        padding: 1.15rem;
+        overflow: hidden;
+      }
+
+      .risk-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, color-mix(in srgb, var(--risk), transparent 86%), transparent 58%);
+        pointer-events: none;
+      }
+
+      .risk-card > * { position: relative; }
+
+      .risk-meter {
+        display: flex;
+        gap: 0.25rem;
+        margin: 0.9rem 0 1rem;
+      }
+
+      .risk-meter span {
+        flex: 1;
+        height: 7px;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.12);
+      }
+
+      .risk-card.low .risk-meter span:nth-child(-n+1),
+      .risk-card.mid .risk-meter span:nth-child(-n+2),
+      .risk-card.high .risk-meter span:nth-child(-n+3) {
+        background: var(--risk);
+      }
+
+      .risk-card h3 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .risk-card h3 span:last-child {
+        color: var(--risk);
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .risk-action {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--line);
+        color: var(--ink);
+        font-size: 0.9rem;
+        font-weight: 800;
+        line-height: 1.45;
+      }
+
+      .utility {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(320px, 1.1fr);
+        gap: 1rem;
+        align-items: stretch;
+      }
+
+      .utility-panel {
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background: var(--panel);
+        padding: 1.2rem;
+      }
+
+      .cohort {
+        display: grid;
+        gap: 0.45rem;
+        margin-top: 1.2rem;
+      }
+
+      .cohort-row {
+        display: grid;
+        grid-template-columns: 96px 1fr 56px;
+        gap: 0.7rem;
+        align-items: center;
+        color: var(--ink-2);
+        font-size: 0.9rem;
+      }
+
+      .bar {
+        height: 10px;
+        overflow: hidden;
+        border-radius: 99px;
+        background: rgba(255, 255, 255, 0.1);
+      }
+
+      .bar span {
+        display: block;
+        height: 100%;
+        width: var(--w);
+        border-radius: inherit;
+        background: var(--c);
+      }
+
+      .decision-curve {
+        min-height: 350px;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+          var(--panel);
+        background-size: 40px 40px;
+        overflow: hidden;
+      }
+
+      .decision-curve svg {
+        display: block;
+        width: 100%;
+        height: 100%;
+        min-height: 350px;
+      }
+
+      .footer {
+        border-top: 1px solid var(--line);
+        padding: 2rem 1.25rem;
+        color: var(--muted);
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        max-width: var(--max);
+        margin: 0 auto;
+        font-size: 0.88rem;
+      }
+
+      .mobile-only { display: none; }
+
+      @media (max-width: 980px) {
+        .hero-grid,
+        .section-heading,
+        .phenotype-layout,
+        .utility {
+          grid-template-columns: 1fr;
+        }
+
+        .journey,
+        .model-ladder,
+        .triage-grid {
+          grid-template-columns: 1fr;
+        }
+
+        h1 { max-width: 14ch; }
+        h2 { max-width: 18ch; }
+      }
+
+      @media (max-width: 640px) {
+        .topbar-inner { align-items: flex-start; flex-direction: column; }
+        .topbar-inner,
+        .hero,
+        .section,
+        .footer {
+          max-width: 100%;
+        }
+        .topbar-inner { width: 100%; }
+        .brand {
+          width: 100%;
+          align-items: flex-start;
+        }
+        .brand span:last-child {
+          min-width: 0;
+          overflow-wrap: anywhere;
+          line-height: 1.25;
+        }
+        .nav {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          width: 100%;
+          padding-bottom: 0;
+        }
+        .nav a {
+          padding-inline: 0.55rem;
+          text-align: center;
+        }
+        .nav a[href="index.html"] { grid-column: 1 / -1; }
+        .hero { padding-top: 2.4rem; }
+        .hero-grid { gap: 1.25rem; }
+        .lead { max-width: 34ch; }
+        .hero-actions {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .button {
+          width: 100%;
+          justify-content: center;
+        }
+        .hero-visual { margin-inline: -0.2rem; }
+        .quick-stats { grid-template-columns: 1fr; }
+        .quick-stat { border-right: 0; border-bottom: 1px solid var(--line); }
+        .feature-grid { grid-template-columns: 1fr; }
+        .footer-inner { flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="topbar-inner">
+        <a class="brand" href="visual_overview.html" aria-label="Visual overview home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 12c2.2-4.2 4.7-6.3 7.5-6.3S17.8 7.8 20 12c-2.2 4.2-4.7 6.3-7.5 6.3S7.2 16.2 5 12Z" stroke="#e8845c" stroke-width="1.7"/>
+              <circle cx="12.5" cy="12" r="2.6" stroke="#d4a052" stroke-width="1.7"/>
+            </svg>
+          </span>
+          <span>Anatomical Motion-Risk Framework</span>
+        </a>
+        <nav class="nav" aria-label="Page links">
+          <a href="#journey">How It Works</a>
+          <a href="#phenotype">Phenotype</a>
+          <a href="#models">Model Ladder</a>
+          <a href="#triage">Triage</a>
+          <a href="index.html">Project Plan</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-grid">
+          <div>
+            <p class="eyebrow">Visual framework overview</p>
+            <h1 id="hero-title">Motion risk before treatment begins</h1>
+            <p class="lead">
+              This project asks whether a patient&apos;s planning CT contains a visible anatomical
+              signature of prostate motion risk. The framework links pre-treatment anatomy,
+              fiducial-tracked motion during treatment, and calibrated decision support for
+              personalized radiotherapy workflows.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="#journey">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Explore the flow
+              </a>
+              <a class="button" href="Project_plan.md">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7 3h7l3 3v15H7V3Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                  <path d="M14 3v4h4M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+                Read source plan
+              </a>
+            </div>
+          </div>
+
+          <figure class="hero-visual" aria-label="Stylized planning CT anatomy connected to motion-risk prediction">
+            <svg viewBox="0 0 720 520" role="img">
+              <defs>
+                <linearGradient id="ctFrame" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#5dbbb1" stop-opacity="0.16"/>
+                  <stop offset="100%" stop-color="#e8845c" stop-opacity="0.18"/>
+                </linearGradient>
+                <linearGradient id="riskPath" x1="0" x2="1">
+                  <stop offset="0%" stop-color="#67c38b"/>
+                  <stop offset="50%" stop-color="#e0b354"/>
+                  <stop offset="100%" stop-color="#ec725f"/>
+                </linearGradient>
+                <filter id="softGlow" x="-40%" y="-40%" width="180%" height="180%">
+                  <feGaussianBlur stdDeviation="8" result="blur"/>
+                  <feMerge>
+                    <feMergeNode in="blur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              <rect x="42" y="42" width="636" height="390" rx="18" fill="url(#ctFrame)" stroke="rgba(244,234,222,.14)"/>
+              <path d="M66 120h180M66 180h140M66 240h170M66 300h130M66 360h150" stroke="rgba(244,234,222,.08)"/>
+              <path d="M474 80c54 32 87 87 87 148 0 105-89 160-199 160S171 333 171 228c0-61 33-116 87-148" fill="none" stroke="rgba(244,234,222,.14)" stroke-width="3"/>
+              <path d="M292 120c-58 24-92 78-92 145 0 73 67 112 162 112s162-39 162-112c0-67-34-121-92-145" fill="rgba(93,187,177,.08)" stroke="rgba(93,187,177,.44)" stroke-width="2"/>
+
+              <ellipse cx="360" cy="175" rx="78" ry="58" fill="rgba(93,187,177,.24)" stroke="#5dbbb1" stroke-width="2"/>
+              <path d="M314 248c17-34 75-34 92 0 17 34-3 73-46 73s-63-39-46-73Z" fill="rgba(232,132,92,.28)" stroke="#e8845c" stroke-width="2"/>
+              <path d="M290 303c-25-18-37-54-29-88 8-36 34-63 68-71" fill="none" stroke="rgba(224,179,84,.64)" stroke-width="12" stroke-linecap="round"/>
+              <path d="M431 150c38 30 58 71 58 116 0 38-15 71-45 96" fill="none" stroke="rgba(236,114,95,.5)" stroke-width="14" stroke-linecap="round"/>
+
+              <g filter="url(#softGlow)">
+                <circle cx="342" cy="280" r="5" fill="#d4a052"/>
+                <circle cx="378" cy="274" r="5" fill="#d4a052"/>
+                <circle cx="364" cy="302" r="5" fill="#d4a052"/>
+              </g>
+
+              <path d="M366 286c21-15 52-11 73 8 24 22 55 20 78 1" fill="none" stroke="url(#riskPath)" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="522" cy="292" r="34" fill="rgba(236,114,95,.12)" stroke="#ec725f" stroke-width="2"/>
+              <path d="M505 296l12 11 24-30" fill="none" stroke="#ec725f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+
+              <g opacity=".92">
+                <rect x="84" y="456" width="140" height="18" rx="9" fill="rgba(103,195,139,.24)"/>
+                <rect x="250" y="456" width="140" height="18" rx="9" fill="rgba(224,179,84,.26)"/>
+                <rect x="416" y="456" width="140" height="18" rx="9" fill="rgba(236,114,95,.26)"/>
+                <circle cx="105" cy="465" r="4" fill="#67c38b"/>
+                <circle cx="271" cy="465" r="4" fill="#e0b354"/>
+                <circle cx="437" cy="465" r="4" fill="#ec725f"/>
+              </g>
+            </svg>
+            <div class="quick-stats" aria-label="Project summary">
+              <div class="quick-stat">
+                <b>Planning CT</b>
+                <span>Pre-treatment anatomy is the starting signal.</span>
+              </div>
+              <div class="quick-stat">
+                <b>Fiducials</b>
+                <span>Triggered imaging gives direct motion evidence.</span>
+              </div>
+              <div class="quick-stat">
+                <b>Triage</b>
+                <span>Risk estimates guide workflow intensity.</span>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </section>
+
+      <section class="section" id="journey" aria-labelledby="journey-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id="journey-title">One patient, two sources of evidence</h2>
+            <p>
+              Non-technical view: the model learns from what was visible before treatment and
+              what actually happened during treatment. The goal is not to replace clinical
+              judgment, but to make motion risk visible earlier.
+            </p>
+          </div>
+
+          <div class="journey">
+            <article class="step-card">
+              <div class="step-visual" aria-hidden="true">
+                <svg viewBox="0 0 420 220">
+                  <rect x="46" y="32" width="328" height="156" rx="12" fill="rgba(255,255,255,.035)" stroke="rgba(244,234,222,.14)"/>
+                  <path d="M84 74h252M84 110h252M84 146h252" stroke="rgba(244,234,222,.06)"/>
+                  <ellipse cx="210" cy="90" rx="56" ry="36" fill="rgba(93,187,177,.22)" stroke="#5dbbb1" stroke-width="2"/>
+                  <path d="M178 137c11-26 53-26 64 0 12 29-3 52-32 52s-44-23-32-52Z" fill="rgba(232,132,92,.22)" stroke="#e8845c" stroke-width="2"/>
+                  <path d="M145 158c-22-18-28-53-13-80" fill="none" stroke="rgba(224,179,84,.62)" stroke-width="10" stroke-linecap="round"/>
+                  <path d="M273 69c34 28 42 71 21 113" fill="none" stroke="rgba(236,114,95,.45)" stroke-width="12" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="step-copy">
+                <span class="step-kicker">Input</span>
+                <h3>Pre-treatment anatomy</h3>
+                <p>Planning CT and organ masks describe the patient&apos;s bladder, rectum, prostate, seminal vesicles, and pelvic geometry before radiotherapy starts.</p>
+              </div>
+            </article>
+
+            <article class="step-card">
+              <div class="step-visual" aria-hidden="true">
+                <svg viewBox="0 0 420 220">
+                  <rect x="52" y="38" width="316" height="144" rx="12" fill="rgba(255,255,255,.035)" stroke="rgba(244,234,222,.14)"/>
+                  <circle cx="210" cy="111" r="52" fill="rgba(232,132,92,.12)" stroke="rgba(232,132,92,.55)" stroke-width="2"/>
+                  <circle cx="210" cy="111" r="35" fill="none" stroke="rgba(224,179,84,.42)" stroke-width="2" stroke-dasharray="5 5"/>
+                  <circle cx="198" cy="106" r="5" fill="#d4a052"/>
+                  <circle cx="220" cy="102" r="5" fill="#d4a052"/>
+                  <circle cx="213" cy="123" r="5" fill="#d4a052"/>
+                  <path d="M198 106c21-15 55-7 72 14 15 18 37 23 59 11" fill="none" stroke="#ec725f" stroke-width="3" stroke-linecap="round"/>
+                  <path d="M110 61v97M310 61v97" stroke="rgba(93,187,177,.5)" stroke-width="2"/>
+                  <path d="M100 81h20M100 138h20M300 81h20M300 138h20" stroke="rgba(93,187,177,.5)" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="step-copy">
+                <span class="step-kicker">Observed outcome</span>
+                <h3>Motion measured during treatment</h3>
+                <p>Gold fiducials tracked in triggered kV imaging provide a direct record of prostate displacement across treatment fractions.</p>
+              </div>
+            </article>
+
+            <article class="step-card">
+              <div class="step-visual" aria-hidden="true">
+                <svg viewBox="0 0 420 220">
+                  <path d="M62 148c58-83 108-83 150 0s91 83 146 0" fill="none" stroke="rgba(232,132,92,.48)" stroke-width="4" stroke-linecap="round"/>
+                  <circle cx="88" cy="121" r="18" fill="rgba(103,195,139,.22)" stroke="#67c38b" stroke-width="2"/>
+                  <circle cx="172" cy="85" r="18" fill="rgba(224,179,84,.24)" stroke="#e0b354" stroke-width="2"/>
+                  <circle cx="249" cy="137" r="18" fill="rgba(236,114,95,.24)" stroke="#ec725f" stroke-width="2"/>
+                  <circle cx="336" cy="91" r="18" fill="rgba(93,187,177,.22)" stroke="#5dbbb1" stroke-width="2"/>
+                  <rect x="96" y="164" width="228" height="14" rx="7" fill="rgba(255,255,255,.08)"/>
+                  <rect x="96" y="164" width="152" height="14" rx="7" fill="url(#riskPathSmall)"/>
+                  <defs>
+                    <linearGradient id="riskPathSmall" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#67c38b"/>
+                      <stop offset="58%" stop-color="#e0b354"/>
+                      <stop offset="100%" stop-color="#ec725f"/>
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <div class="step-copy">
+                <span class="step-kicker">Prediction</span>
+                <h3>Calibrated risk estimate</h3>
+                <p>The framework produces a patient-level probability or low, intermediate, high grouping that can be tested in retrospective triage simulations.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="phenotype" aria-labelledby="phenotype-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id="phenotype-title">The anatomical motion-risk phenotype</h2>
+            <p>
+              The central scientific idea is that motion risk may not come from one measurement.
+              It may emerge from a configuration of organs, interfaces, and pelvic geometry.
+            </p>
+          </div>
+
+          <div class="phenotype-layout">
+            <div class="phenotype-map" aria-label="Network map of anatomical contributors to motion risk">
+              <svg viewBox="0 0 560 560" role="img">
+                <defs>
+                  <filter id="nodeGlow" x="-60%" y="-60%" width="220%" height="220%">
+                    <feGaussianBlur stdDeviation="5" result="blur"/>
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <circle cx="280" cy="280" r="150" fill="rgba(255,255,255,.025)" stroke="rgba(244,234,222,.08)"/>
+                <circle cx="280" cy="280" r="92" fill="rgba(232,132,92,.1)" stroke="rgba(232,132,92,.34)"/>
+                <text x="280" y="270" text-anchor="middle" fill="#f4eade" font-size="20" font-weight="800">Motion-Risk</text>
+                <text x="280" y="297" text-anchor="middle" fill="#d5c3af" font-size="15">Phenotype</text>
+
+                <g stroke-width="2" stroke-linecap="round" opacity=".82">
+                  <path d="M280 188L280 84" stroke="#5dbbb1"/>
+                  <path d="M351 222L459 158" stroke="#e0b354"/>
+                  <path d="M359 337L463 404" stroke="#ec725f"/>
+                  <path d="M205 337L96 403" stroke="#67c38b"/>
+                  <path d="M205 222L96 157" stroke="#d4a052"/>
+                </g>
+
+                <g filter="url(#nodeGlow)">
+                  <circle cx="280" cy="74" r="47" fill="rgba(93,187,177,.18)" stroke="#5dbbb1"/>
+                  <circle cx="474" cy="149" r="47" fill="rgba(224,179,84,.18)" stroke="#e0b354"/>
+                  <circle cx="475" cy="413" r="47" fill="rgba(236,114,95,.18)" stroke="#ec725f"/>
+                  <circle cx="85" cy="413" r="47" fill="rgba(103,195,139,.18)" stroke="#67c38b"/>
+                  <circle cx="85" cy="149" r="47" fill="rgba(212,160,82,.18)" stroke="#d4a052"/>
+                </g>
+
+                <text x="280" y="69" text-anchor="middle" fill="#f4eade" font-size="14" font-weight="800">Bladder</text>
+                <text x="280" y="89" text-anchor="middle" fill="#d5c3af" font-size="12">filling state</text>
+                <text x="474" y="144" text-anchor="middle" fill="#f4eade" font-size="14" font-weight="800">Rectum</text>
+                <text x="474" y="164" text-anchor="middle" fill="#d5c3af" font-size="12">morphology</text>
+                <text x="475" y="408" text-anchor="middle" fill="#f4eade" font-size="14" font-weight="800">Interfaces</text>
+                <text x="475" y="428" text-anchor="middle" fill="#d5c3af" font-size="12">contact maps</text>
+                <text x="85" y="408" text-anchor="middle" fill="#f4eade" font-size="14" font-weight="800">Pelvis</text>
+                <text x="85" y="428" text-anchor="middle" fill="#d5c3af" font-size="12">shape</text>
+                <text x="85" y="144" text-anchor="middle" fill="#f4eade" font-size="14" font-weight="800">SV</text>
+                <text x="85" y="164" text-anchor="middle" fill="#d5c3af" font-size="12">geometry</text>
+              </svg>
+            </div>
+
+            <div class="feature-grid">
+              <article class="feature-card" data-tone="teal">
+                <span class="card-kicker">Organ state</span>
+                <h3>Bladder and rectum as motion context</h3>
+                <p>Volumes, distension, and shape help describe the soft-tissue conditions around the prostate.</p>
+              </article>
+              <article class="feature-card" data-tone="amber">
+                <span class="card-kicker">Spatial coupling</span>
+                <h3>Interfaces may matter more than isolated organs</h3>
+                <p>Prostate-to-rectum distance, contact area, and bladder interface maps capture how anatomy is arranged.</p>
+              </article>
+              <article class="feature-card" data-tone="green">
+                <span class="card-kicker">Patient geometry</span>
+                <h3>Pelvic shape as a stable patient signature</h3>
+                <p>Pelvic width, anterior-posterior diameter, and body contour can add patient-specific context.</p>
+              </article>
+              <article class="feature-card" data-tone="coral">
+                <span class="card-kicker">Explainability</span>
+                <h3>Predictions should be clinically interpretable</h3>
+                <p>Global and local explanations can show which anatomical feature groups drive a risk score.</p>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="models" aria-labelledby="models-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id="models-title">A model ladder, not a black box jump</h2>
+            <p>
+              The framework compares simple transparent models against more complex imaging and
+              foundation-model representations. Each step must earn its added complexity.
+            </p>
+          </div>
+
+          <div class="model-ladder">
+            <article class="model-card" style="--tone: #d4a052">
+              <div class="model-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M7 22h18M9 18h14M11 14h10M13 10h6" stroke="#d4a052" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="card-kicker">Step 1</span>
+              <h3>Geometric biomarkers</h3>
+              <p>Transparent features from organ volumes, distances, shapes, and contact measures.</p>
+              <ul>
+                <li>Logistic regression</li>
+                <li>Elastic net and tree baselines</li>
+                <li>Clinically readable benchmark</li>
+              </ul>
+            </article>
+
+            <article class="model-card" style="--tone: #5dbbb1">
+              <div class="model-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="8" y="8" width="16" height="16" rx="2" stroke="#5dbbb1" stroke-width="2"/>
+                  <path d="M12 8V5M20 8V5M12 27v-3M20 27v-3M5 12h3M5 20h3M24 12h3M24 20h3" stroke="#5dbbb1" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <span class="card-kicker">Step 2</span>
+              <h3>3D CT and mask models</h3>
+              <p>Image-based models test whether learned anatomy improves risk prediction.</p>
+              <ul>
+                <li>CT-only input</li>
+                <li>Mask-only input</li>
+                <li>CT plus organ masks</li>
+              </ul>
+            </article>
+
+            <article class="model-card" style="--tone: #e8845c">
+              <div class="model-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M8 18c2.3-6.8 6.2-10.2 11.7-10.2 2.6 0 4.7.7 6.3 2.2M24 15c-2.4 6.1-6.1 9.2-11.2 9.2-2.8 0-5.1-.8-6.8-2.4" stroke="#e8845c" stroke-width="2" stroke-linecap="round"/>
+                  <circle cx="16" cy="16" r="3" stroke="#e8845c" stroke-width="2"/>
+                </svg>
+              </div>
+              <span class="card-kicker">Step 3</span>
+              <h3>Foundation representations</h3>
+              <p>MAISI-v2, CTFM, or related encoders may capture richer anatomical patterns.</p>
+              <ul>
+                <li>Latent anatomical embeddings</li>
+                <li>Correlation with known geometry</li>
+                <li>Representation probing</li>
+              </ul>
+            </article>
+
+            <article class="model-card" style="--tone: #67c38b">
+              <div class="model-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <path d="M7 18l5 5L25 9" stroke="#67c38b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 9h10M7 14h7" stroke="#67c38b" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+                </svg>
+              </div>
+              <span class="card-kicker">Step 4</span>
+              <h3>Combined triage model</h3>
+              <p>The final candidate should be calibrated, validated, and useful in virtual clinical decisions.</p>
+              <ul>
+                <li>Low, intermediate, high risk</li>
+                <li>Calibration and decision curves</li>
+                <li>Patient-level explanations</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="triage" aria-labelledby="triage-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id="triage-title">From risk score to workflow choice</h2>
+            <p>
+              The retrospective triage study tests whether the framework could have identified
+              patients who needed more intensive motion management before treatment delivery.
+            </p>
+          </div>
+
+          <div class="triage-grid">
+            <article class="risk-card low" style="--risk: #67c38b">
+              <span class="card-kicker">Predicted group</span>
+              <h3><span>Low risk</span><span>Stable</span></h3>
+              <div class="risk-meter" aria-hidden="true"><span></span><span></span><span></span></div>
+              <p>Patients predicted to have low motion burden may remain suitable for standard preparation and routine triggered imaging.</p>
+              <div class="risk-action">Clinical simulation: standard workflow and standard margins.</div>
+            </article>
+
+            <article class="risk-card mid" style="--risk: #e0b354">
+              <span class="card-kicker">Predicted group</span>
+              <h3><span>Intermediate</span><span>Watch</span></h3>
+              <div class="risk-meter" aria-hidden="true"><span></span><span></span><span></span></div>
+              <p>This group may benefit from more frequent verification or stricter preparation before motion becomes clinically relevant.</p>
+              <div class="risk-action">Clinical simulation: additional CBCT and stricter triggered imaging settings.</div>
+            </article>
+
+            <article class="risk-card high" style="--risk: #ec725f">
+              <span class="card-kicker">Predicted group</span>
+              <h3><span>High risk</span><span>Escalate</span></h3>
+              <div class="risk-meter" aria-hidden="true"><span></span><span></span><span></span></div>
+              <p>High-risk anatomy could trigger individualized margins, real-time tracking, adaptive workflow, or increased imaging.</p>
+              <div class="risk-action">Clinical simulation: intensive motion management and personalized treatment support.</div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" aria-labelledby="utility-title">
+        <div class="section-inner">
+          <div class="section-heading">
+            <h2 id="utility-title">What success would look like</h2>
+            <p>
+              A useful model is not just accurate. It should catch high-motion patients, avoid
+              unnecessary intensified workflows for stable patients, and remain calibrated enough
+              for clinical discussion.
+            </p>
+          </div>
+
+          <div class="utility">
+            <div class="utility-panel">
+              <span class="card-kicker">Virtual cohort questions</span>
+              <h3>Decision support should answer practical questions</h3>
+              <div class="cohort" aria-label="Evaluation priorities">
+                <div class="cohort-row">
+                  <span>Sensitivity</span>
+                  <div class="bar"><span style="--w: 86%; --c: #67c38b"></span></div>
+                  <strong>high</strong>
+                </div>
+                <div class="cohort-row">
+                  <span>Calibration</span>
+                  <div class="bar"><span style="--w: 74%; --c: #5dbbb1"></span></div>
+                  <strong>clear</strong>
+                </div>
+                <div class="cohort-row">
+                  <span>False alarms</span>
+                  <div class="bar"><span style="--w: 38%; --c: #e0b354"></span></div>
+                  <strong>limited</strong>
+                </div>
+                <div class="cohort-row">
+                  <span>Explainability</span>
+                  <div class="bar"><span style="--w: 68%; --c: #e8845c"></span></div>
+                  <strong>visible</strong>
+                </div>
+              </div>
+            </div>
+
+            <div class="decision-curve" aria-label="Stylized decision utility curve">
+              <svg viewBox="0 0 640 350" role="img">
+                <path d="M72 286H584M72 52V286" stroke="rgba(244,234,222,.28)" stroke-width="2"/>
+                <path d="M72 244C168 214 229 169 311 140c82-29 151-4 236-78" fill="none" stroke="#e8845c" stroke-width="4" stroke-linecap="round"/>
+                <path d="M72 258C170 248 249 229 340 212c91-17 161-22 207-46" fill="none" stroke="#5dbbb1" stroke-width="3" stroke-linecap="round" opacity=".85"/>
+                <path d="M72 273C165 271 255 268 340 258c85-10 154-27 207-57" fill="none" stroke="#e0b354" stroke-width="3" stroke-linecap="round" opacity=".72"/>
+                <g fill="#f4eade" font-size="13" font-weight="800">
+                  <text x="82" y="74">More useful triage</text>
+                  <text x="380" y="316">Risk threshold</text>
+                </g>
+                <g fill="#d5c3af" font-size="12">
+                  <text x="415" y="70">combined anatomy model</text>
+                  <text x="410" y="173">geometry baseline</text>
+                  <text x="410" y="207">volume-only comparison</text>
+                </g>
+                <circle cx="470" cy="94" r="5" fill="#e8845c"/>
+                <circle cx="470" cy="166" r="5" fill="#5dbbb1"/>
+                <circle cx="470" cy="201" r="5" fill="#e0b354"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>Designed for non-technical visitors: no patient data, no generated medical images.</span>
+        <span>Source concept: Project_plan.md</span>
+      </div>
+    </footer>
+  </body>
+</html>
